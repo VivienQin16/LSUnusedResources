@@ -44,4 +44,10 @@ And using in this way:
 
 ## Requirements
 
+# vivien修改和补充
+## 20170707
+### 1，因为我的项目中有些资源文件放在Bundle中，原有工程检测不出来；所以做了修改，让可以检测Bundle中的资源文件；
+### 2，如果填文件Name时采用了@"XXX.jpg/png", @"xxx@2x.png/jpg"均会被能为相应的图片没有被调用。所以也做了调整。
+
+
 Requires OS X 10.7 and above, ARC.
