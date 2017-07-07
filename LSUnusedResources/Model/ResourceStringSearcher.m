@@ -70,16 +70,48 @@ typedef NS_ENUM(NSUInteger, LSFileType) {
     [self.resStringSet removeAllObjects];
 }
 
+
+/**
+ 
+ @param name 资源文件
+ @return YES: self.resStringSet 含这个值，不是无用Res,NO：不含，疑似无用res;
+ */
 - (BOOL)containsResourceName:(NSString *)name {
     if ([self.resStringSet containsObject:name]) {
         return YES;
     } else {
         if ([name pathExtension]) {
+            
+            //name 为资源名字，去处后缀@3x @2x
             NSString *nameWithoutSuffix = [StringUtils stringByRemoveResourceSuffix:name];
-            return [self.resStringSet containsObject:nameWithoutSuffix];
+            
+            for (NSString *res in self.resStringSet) {
+                NSMutableString *tempResString = [NSMutableString stringWithString:res];
+                NSArray *array = [res componentsSeparatedByString:@"."];
+                if (array.count >0 ) {
+                    tempResString = array[0];
+                }
+                tempResString = (NSMutableString *)[StringUtils stringByRemoveResourceSuffix:(NSString *)tempResString];
+                
+                if([tempResString isEqualToString:nameWithoutSuffix])
+                {
+                    return YES;
+                }
+            }
+//            return [self.resStringSet containsObject:nameWithoutSuffix];
         }
     }
     return NO;
+}
+//vivien
+- (BOOL)containsResourceNameAsSuffix:(NSString *)name
+{
+    for (NSString *res in self.resStringSet) {
+        
+        NSLog(@"res:%@",res);
+    }
+    
+    return YES;
 }
 
 - (BOOL)containsSimilarResourceName:(NSString *)name {
@@ -185,6 +217,7 @@ typedef NS_ENUM(NSUInteger, LSFileType) {
     NSInteger groupIndex = -1;
     switch (fileType) {
         case LSFileTypeObjC:
+            //vivien  这个错了
             pattern = @"@\"(.+?)\"";//@"imageNamed:@\"(.+)\"";//or: (imageNamed|contentOfFile):@\"(.*)\" // http://www.raywenderlich.com/30288/nsregularexpression-tutorial-and-cheat-sheet
             groupIndex = 1;
             break;

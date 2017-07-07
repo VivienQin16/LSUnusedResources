@@ -87,6 +87,7 @@ static NSString * const kSuffixPng         = @"png";
 - (void)scanResourceFileWithProjectPath:(NSString *)projectPath excludeFolders:(NSArray *)excludeFolders resourceSuffixs:(NSArray *)resourceSuffixs {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSArray *resPaths = [self resourceFilesInDirectory:projectPath excludeFolders:excludeFolders resourceSuffixs:resourceSuffixs];
+        //vivien resPaths 为搜索出来的所有资源文件地址
         
         NSMutableDictionary *tempResNameInfoDict = [NSMutableDictionary dictionary];
         for (NSString *path in resPaths) {
@@ -130,7 +131,7 @@ static NSString * const kSuffixPng         = @"png";
                 for (NSString *path in pathList) {
                     // if the resource file is not in xxx/xxx.imageset/; xx/LaunchImage.launchimage; xx/AppIcon.appiconset
                     if ([path rangeOfString:kSuffixImageSet].location == NSNotFound
-                        && [path rangeOfString:kSuffixBundle].location == NSNotFound
+                       // && [path rangeOfString:kSuffixBundle].location == NSNotFound   //允许查找bundle中的文件
                         && [path rangeOfString:kSuffixAppIcon].location == NSNotFound
                         && [path rangeOfString:kSuffixLaunchImage].location == NSNotFound) {
                             [resources addObject:path];
@@ -160,7 +161,7 @@ static NSString * const kSuffixPng         = @"png";
 }
 
 - (NSArray *)searchDirectory:(NSString *)directoryPath excludeFolders:(NSArray *)excludeFolders forFiletype:(NSString *)filetype {
-    // Create a find task
+    // Create a find task //使用shell指令
     NSTask *task = [[NSTask alloc] init];
     [task setLaunchPath: @"/usr/bin/find"];
     
@@ -169,7 +170,9 @@ static NSString * const kSuffixPng         = @"png";
     [argvals addObject:directoryPath];
     [argvals addObject:@"-name"];
     [argvals addObject:[NSString stringWithFormat:@"*.%@", filetype]];
-    
+//    [argvals addObject:@"-o"];
+//    [argvals addObject:[NSString stringWithFormat:@"'*@3x.%@'", filetype]];
+
     for (NSString *folder in excludeFolders) {
         [argvals addObject:@"!"];
         [argvals addObject:@"-path"];
@@ -185,7 +188,7 @@ static NSString * const kSuffixPng         = @"png";
     // Run task
     [task launch];
     
-    // Read the response
+    // Read the response  // 获取运行结果
     NSData *data = [file readDataToEndOfFile];
     NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
@@ -197,7 +200,7 @@ static NSString * const kSuffixPng         = @"png";
     return nil;
 }
 
-// Toooooo Sloooooow
+// Toooooo Sloooooow   没在用
 - (NSArray *)searchDirectory:(NSString *)directoryPath excludeFolders:(NSArray *)excludeFolders forFiletypes:(NSArray *)filetypes {
     // find -E . -iregex ".*\.(html|plist)" ! -path "*/Movies/*" ! -path "*/Downloads/*" ! -path "*/Music/*"
     // Create a find task

@@ -103,7 +103,7 @@ static NSString * const kTableColumnFileSize       = @"FileSize";
         [self.pathTextField setStringValue:path];
     }
 }
-
+//开始查询
 - (IBAction)onSearchButtonClicked:(id)sender {
     // Check if user has selected or entered a path
     NSString *projectPath = self.pathTextField.stringValue;
@@ -358,9 +358,10 @@ static NSString * const kTableColumnFileSize       = @"FileSize";
     if (self.isFileDone && self.isStringDone) {
         NSArray *resNames = [[[ResourceFileSearcher sharedObject].resNameInfoDict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
         for (NSString *name in resNames) {
+            // self.resStringset中若不包含这个名字，则认为这个文件没有被调用
             if (![[ResourceStringSearcher sharedObject] containsResourceName:name]) {
                 if (!self.ignoreSimilarCheckbox.state
-                    || ![[ResourceStringSearcher sharedObject] containsSimilarResourceName:name]) {
+                    || ![[ResourceStringSearcher sharedObject] containsSimilarResourceName:name] ) {
                     [self.unusedResults addObject:[ResourceFileSearcher sharedObject].resNameInfoDict[name]];
                 }
             }
