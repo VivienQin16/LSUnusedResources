@@ -131,7 +131,7 @@ static NSString * const kSuffixPng         = @"png";
                 for (NSString *path in pathList) {
                     // if the resource file is not in xxx/xxx.imageset/; xx/LaunchImage.launchimage; xx/AppIcon.appiconset
                     if ([path rangeOfString:kSuffixImageSet].location == NSNotFound
-                       // && [path rangeOfString:kSuffixBundle].location == NSNotFound   //允许查找bundle中的文件
+                       // && [path rangeOfString:kSuffixBundle].location == NSNotFound   //允许查找bundle中的文件 vivien修改
                         && [path rangeOfString:kSuffixAppIcon].location == NSNotFound
                         && [path rangeOfString:kSuffixLaunchImage].location == NSNotFound) {
                             [resources addObject:path];

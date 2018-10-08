@@ -84,7 +84,7 @@ typedef NS_ENUM(NSUInteger, LSFileType) {
             
             //name 为资源名字，去处后缀@3x @2x
             NSString *nameWithoutSuffix = [StringUtils stringByRemoveResourceSuffix:name];
-            
+            // viiven 修改
             for (NSString *res in self.resStringSet) {
                 NSMutableString *tempResString = [NSMutableString stringWithString:res];
                 NSArray *array = [res componentsSeparatedByString:@"."];
@@ -102,16 +102,6 @@ typedef NS_ENUM(NSUInteger, LSFileType) {
         }
     }
     return NO;
-}
-//vivien
-- (BOOL)containsResourceNameAsSuffix:(NSString *)name
-{
-    for (NSString *res in self.resStringSet) {
-        
-        NSLog(@"res:%@",res);
-    }
-    
-    return YES;
 }
 
 - (BOOL)containsSimilarResourceName:(NSString *)name {
